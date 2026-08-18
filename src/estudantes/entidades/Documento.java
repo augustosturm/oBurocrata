@@ -1,5 +1,7 @@
 package estudantes.entidades;
 
+import professor.entidades.CodigoCurso;
+
 /**
  * Classe que representa um documento genérico.
  * <br><br>
@@ -8,5 +10,13 @@ package estudantes.entidades;
  * @author coloque os nomes dos autores aqui
  */
 public abstract class Documento {
+    private String criador;
+    private CodigoCurso codigoCurso;
+    private int paginas;
     
+    public Documento(String criador, CodigoCurso codigoCurso, int paginas){
+        this.criador = criador;
+        this.codigoCurso = codigoCurso;
+        this.paginas = paginas;
+    }
 }
