@@ -1,6 +1,7 @@
 package estudantes.entidades;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 import professor.entidades.CodigoCurso;
 
@@ -15,35 +16,19 @@ public class Ata extends Documento{
     }
 
     @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = super.hashCode();
-        result = prime * result + numero;
-        result = prime * result + ((texto == null) ? 0 : texto.hashCode());
-        result = prime * result + Arrays.hashCode(presentes);
-        return result;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        Ata ata = (Ata) o;
+        return numero == ata.numero &&
+               Objects.equals(texto, ata.texto) &&
+               Arrays.equals(presentes, ata.presentes);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (!super.equals(obj))
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Ata other = (Ata) obj;
-        if (numero != other.numero)
-            return false;
-        if (texto == null) {
-            if (other.texto != null)
-                return false;
-        } else if (!texto.equals(other.texto))
-            return false;
-        if (!Arrays.equals(presentes, other.presentes))
-            return false;
-        return true;
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), numero, texto, Arrays.hashCode(presentes));
     }
 }
