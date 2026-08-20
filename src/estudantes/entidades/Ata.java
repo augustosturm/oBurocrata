@@ -9,7 +9,7 @@ import professor.entidades.CodigoCurso;
  * Classe que representa uma ata de aula.
  * <br><br>
  *
- * @author coloque os nomes dos autores aqui
+ * @author Augusto, Gabriel e Matheus
  */
 public class Ata extends Documento{
     private int numero;
