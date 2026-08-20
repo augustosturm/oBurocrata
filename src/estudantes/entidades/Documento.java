@@ -7,7 +7,7 @@ import java.util.Objects;
  * Classe que representa um documento genérico.
  * <br><br>
  * 
- * @author coloque os nomes dos autores aqui
+ * @author Augusto, Gabriel e Matheus
  */
 public abstract class Documento {
     private String criador;

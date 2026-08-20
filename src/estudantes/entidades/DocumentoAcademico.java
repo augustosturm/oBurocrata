@@ -8,7 +8,7 @@ import professor.entidades.CodigoCurso;
  * Classe que representa um documento acadêmico, autenticado por um código.
  * <br><br>
  *
- * @author coloque os nomes dos autores aqui
+ * @author Augusto, Gabriel e Matheus
  */
 public abstract class DocumentoAcademico extends Documento{
     private long autenticacao;

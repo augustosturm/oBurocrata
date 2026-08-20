@@ -10,7 +10,7 @@ import professor.entidades.*;
  * processos, mas eles não serão invocados diretamente pelo simulador e devem
  * respeitar propriedades de encapsulamento e coesão.
  * 
- * @author coloque os nomes dos autores aqui
+ * @author Augusto, Gabriel e Matheus
  */
 public class Burocrata {
     private int estresse = 0;
