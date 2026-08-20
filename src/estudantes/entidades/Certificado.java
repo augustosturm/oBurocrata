@@ -1,6 +1,5 @@
 package estudantes.entidades;
 
-import java.util.Arrays;
 import java.util.Objects;
 
 import professor.entidades.CodigoCurso;
@@ -11,9 +10,8 @@ import professor.entidades.CodigoCurso;
  *
  * @author Augusto, Gabriel e Matheus
  */
-public class Historico extends Registro {
-    private double coeficiente;
-    private String[] componentes;
+public class Certificado extends Registro {
+    private String descriacao;
 
     /**
      * Construtor da classe Registro.
@@ -24,23 +22,19 @@ public class Historico extends Registro {
      * @param autenticacao Código de autenticação do documento
      * @param estudante Nome do estudante associado ao registro
      * @param matricula Número de matrícula do estudante
-     * @param coeficiente Coeficiente
-     * @param componentes Componentes
+     * @param descricao Descricao do certificado
      */
-    public Historico(String criador, CodigoCurso codigoCurso, int paginas, long autenticacao, String estudante,
-            long matricula, double coeficiente, String[] componentes) {
-
+    public Certificado(String criador, CodigoCurso codigoCurso, int paginas, long autenticacao, String estudante,
+            long matricula, String descriacao) {
         super(criador, codigoCurso, paginas, autenticacao, estudante, matricula);
-        this.coeficiente = coeficiente;
-        this.componentes = componentes;
+        this.descriacao = descriacao;
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = super.hashCode();
-        result = prime * result + Arrays.hashCode(componentes);
-        result = prime * result + Objects.hash(coeficiente);
+        result = prime * result + Objects.hash(descriacao);
         return result;
     }
 
@@ -54,11 +48,10 @@ public class Historico extends Registro {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Historico other = (Historico) obj;
-        return Double.doubleToLongBits(coeficiente) == Double.doubleToLongBits(other.coeficiente)
-                && Arrays.equals(componentes, other.componentes);
+        Certificado other = (Certificado) obj;
+        return Objects.equals(descriacao, other.descriacao);
     }
 
     
-
+    
 }
