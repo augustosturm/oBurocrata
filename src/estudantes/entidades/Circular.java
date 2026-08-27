@@ -1,6 +1,7 @@
 package estudantes.entidades;
 
 import java.util.Arrays;
+
 import java.util.Objects;
 
 import professor.entidades.CodigoCurso;
