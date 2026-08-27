@@ -1,17 +1,16 @@
 package estudantes.entidades;
 
-import java.util.Arrays;
 
 import java.util.Objects;
 
 import professor.entidades.CodigoCurso;
 
-public class Circular extends Deliberacao {
-    private String [] destinatarios;
+public class Oficio extends Deliberacao {
+    private String destinatario;
 
-    public Circular(String criador, CodigoCurso codigoCurso, int paginas,String texto,String[] destinatariosStrings) {
+    public Oficio(String criador, CodigoCurso codigoCurso, int paginas,String texto,String destinatarioString) {
         super(criador, codigoCurso, paginas,texto);
-        this.destinatarios = destinatariosStrings;
+        this.destinatario = destinatarioString;
 
     }
      @Override
@@ -24,17 +23,18 @@ public class Circular extends Deliberacao {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-        Circular other = (Circular) obj;
-		return Arrays.equals(destinatarios, other.destinatarios);
+        Oficio other = (Oficio) obj; 
+		return Objects.equals(destinatario, other.destinatario);
 	}   
      @Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime * result + Arrays.hashCode(destinatarios);
+		result = prime * result + Objects.hashCode(destinatario);
 		return result;
 	}
-    public String[] getDestinatarios(){
-        return destinatarios;
+    public String getDestinatario(){
+        return destinatario;
     }
 }
+
