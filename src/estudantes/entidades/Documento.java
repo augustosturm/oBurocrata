@@ -41,4 +41,13 @@ public abstract class Documento {
 		Documento other = (Documento) obj;
 		return Objects.equals(criador, other.criador) && codigoCurso == other.codigoCurso && paginas == other.paginas;
 	}
+    public String getCriador() {
+        return criador;
+    }
+    public CodigoCurso getCodigoCurso() {
+        return codigoCurso;
+    }
+    public int getPaginas() {
+        return paginas;
+    }
 }
