@@ -17,6 +17,9 @@ public class Burocrata {
     private Mesa mesa;
     private Universidade universidade;
     
+    public Superprocesso[] superprocessos;
+  
+    
     /**
      * Construtor de Burocrata.
      * 
@@ -26,6 +29,7 @@ public class Burocrata {
     public Burocrata(Mesa m, Universidade u){
         this.mesa = m;
         this.universidade = u;
+        superprocessos = new Superprocesso[5];
     }
     
     /**
@@ -56,7 +60,18 @@ public class Burocrata {
      * @see professor.entidades.Universidade#devolverDocumentoParaMonteDoCurso(estudantes.entidades.Documento, professor.entidades.CodigoCurso) 
      */
     public void trabalhar(){
+        //universidade.pegarCopiaDoMonteDoCurso(CodigoCurso.GRADUACAO_BIOTECNOLOGIA);
+
+        for(int i = 0; i < 5; i++){
+            Processo atual = mesa.getProcesso(i);
+            
+            if (atual != null && (superprocessos[i] == null || !superprocessos[i].ativo)) {
+                superprocessos[i] = new Superprocesso(atual);
+            }
+        }
+
         
+
     }
     
     /**
