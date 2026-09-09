@@ -31,7 +31,7 @@ public class Norma extends DocumentoAdministrativo {
 		result = prime * result + Objects.hash(numero,valido,texto);
 		return result;
 	}
-    public boolean getValido(){
+    public boolean isValido(){
         return this.valido;
     }
     public String getTexto(){

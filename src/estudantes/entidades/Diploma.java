@@ -11,7 +11,7 @@ import professor.entidades.CodigoCurso;
  * @author Augusto, Gabriel e Matheus
  */
 public class Diploma extends Certificado {
-    private String hibilitacao;
+    private String habilitacao;
     
      /**
      * Construtor da classe Registro.
@@ -26,16 +26,16 @@ public class Diploma extends Certificado {
      * @param habilitacao Habilitação no curso formado
      */
     public Diploma(String criador, CodigoCurso codigoCurso, int paginas, long autenticacao, String estudante,
-            long matricula, String descriacao, String hibilitacao) {
+            long matricula, String descriacao, String habilitacao) {
         super(criador, codigoCurso, paginas, autenticacao, estudante, matricula, descriacao);
-        this.hibilitacao = hibilitacao;
+        this.habilitacao = habilitacao;
     }
 
         @Override
     public int hashCode() {
         final int prime = 31;
         int result = super.hashCode();
-        result = prime * result + Objects.hash(hibilitacao);
+        result = prime * result + Objects.hash(habilitacao);
         return result;
     }
 
@@ -50,6 +50,6 @@ public class Diploma extends Certificado {
         if (getClass() != obj.getClass())
             return false;
         Diploma other = (Diploma) obj;
-        return Objects.equals(hibilitacao, other.hibilitacao);
+        return Objects.equals(habilitacao, other.habilitacao);
     }
 }

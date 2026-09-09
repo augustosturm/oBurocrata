@@ -53,6 +53,8 @@ public class Atestado extends Registro {
         Atestado other = (Atestado) obj;
         return Objects.equals(descricao, other.descricao) && Objects.equals(categoria, other.categoria);
     }
-    
-    
+
+    public String getCategoria() {
+        return categoria;
+    }
 }

@@ -61,6 +61,15 @@ public class Burocrata {
      */
     public void trabalhar(){
         //universidade.pegarCopiaDoMonteDoCurso(CodigoCurso.GRADUACAO_BIOTECNOLOGIA);
+        //universidade.pegarCopiaDoMonteDoCurso(CodigoCurso.GRADUACAO_CIENCIA_DA_COMPUTACAO);
+        //universidade.pegarCopiaDoMonteDoCurso(CodigoCurso.GRADUACAO_CIENCIA_DE_DADOS);
+        //universidade.pegarCopiaDoMonteDoCurso(CodigoCurso.GRADUACAO_CIENCIA_E_TECNOLOGIA);
+        //universidade.pegarCopiaDoMonteDoCurso(CodigoCurso.GRADUACAO_ENGENHARIA_DE_AUTOMACAO);
+        //universidade.pegarCopiaDoMonteDoCurso(CodigoCurso.GRADUACAO_ENGENHARIA_DE_COMPUTACAO);
+        //universidade.pegarCopiaDoMonteDoCurso(CodigoCurso.GRADUACAO_ENGENHARIA_ELETRICA);
+        //universidade.pegarCopiaDoMonteDoCurso(CodigoCurso.POS_GRADUACAO_COMPUTACAO);
+        //universidade.pegarCopiaDoMonteDoCurso(CodigoCurso.POS_GRADUACAO_ENGENHARIA_ELETRICA);
+        //universidade.pegarCopiaDoMonteDoCurso(CodigoCurso.POS_GRADUACAO_MICROELETRONICA);
 
         for(int i = 0; i < 5; i++){
             Processo atual = mesa.getProcesso(i);
@@ -71,6 +80,7 @@ public class Burocrata {
         }
 
         
+
 
     }
     

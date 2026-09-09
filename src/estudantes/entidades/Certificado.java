@@ -11,7 +11,7 @@ import professor.entidades.CodigoCurso;
  * @author Augusto, Gabriel e Matheus
  */
 public class Certificado extends Registro {
-    private String descriacao;
+    private String descricao;
 
     /**
      * Construtor da classe Registro.
@@ -25,16 +25,16 @@ public class Certificado extends Registro {
      * @param descricao Descricao do certificado
      */
     public Certificado(String criador, CodigoCurso codigoCurso, int paginas, long autenticacao, String estudante,
-            long matricula, String descriacao) {
+            long matricula, String descricao) {
         super(criador, codigoCurso, paginas, autenticacao, estudante, matricula);
-        this.descriacao = descriacao;
+        this.descricao = descricao;
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = super.hashCode();
-        result = prime * result + Objects.hash(descriacao);
+        result = prime * result + Objects.hash(descricao);
         return result;
     }
 
@@ -49,7 +49,7 @@ public class Certificado extends Registro {
         if (getClass() != obj.getClass())
             return false;
         Certificado other = (Certificado) obj;
-        return Objects.equals(descriacao, other.descriacao);
+        return Objects.equals(descricao, other.descricao);
     }
 
     
