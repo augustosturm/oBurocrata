@@ -5,9 +5,26 @@ import java.util.Objects;
 
 import professor.entidades.CodigoCurso;
 
+/**
+ * Classe que representa um edital que é uma Norma.
+ * <br><br>
+ *
+ * @author Augusto, Gabriel e Matheus
+ */
 public class Edital extends Norma {
     private String[] responsaveis;
 
+    /**
+     * Construtor da classe Edital.
+     *
+     * @param criador Nome do criador do documento
+     * @param codigoCurso Código do curso associado ao documento
+     * @param paginas Número de páginas do documento
+     * @param numero Número da norma
+     * @param valido Indica se a norma está válida
+     * @param texto Texto da norma
+     * @param responsaveis Nomes dos responsáveis pelo edital
+     */
     public Edital(String criador, CodigoCurso codigoCurso, int paginas, int numero, boolean valido, String texto,
             String[] responsaveis) {
         super(criador, codigoCurso, paginas, numero, valido, texto);
