@@ -60,28 +60,41 @@ public class Burocrata {
      * @see professor.entidades.Universidade#devolverDocumentoParaMonteDoCurso(estudantes.entidades.Documento, professor.entidades.CodigoCurso) 
      */
     public void trabalhar(){
-        //universidade.pegarCopiaDoMonteDoCurso(CodigoCurso.GRADUACAO_BIOTECNOLOGIA);
-        //universidade.pegarCopiaDoMonteDoCurso(CodigoCurso.GRADUACAO_CIENCIA_DA_COMPUTACAO);
-        //universidade.pegarCopiaDoMonteDoCurso(CodigoCurso.GRADUACAO_CIENCIA_DE_DADOS);
-        //universidade.pegarCopiaDoMonteDoCurso(CodigoCurso.GRADUACAO_CIENCIA_E_TECNOLOGIA);
-        //universidade.pegarCopiaDoMonteDoCurso(CodigoCurso.GRADUACAO_ENGENHARIA_DE_AUTOMACAO);
-        //universidade.pegarCopiaDoMonteDoCurso(CodigoCurso.GRADUACAO_ENGENHARIA_DE_COMPUTACAO);
-        //universidade.pegarCopiaDoMonteDoCurso(CodigoCurso.GRADUACAO_ENGENHARIA_ELETRICA);
-        //universidade.pegarCopiaDoMonteDoCurso(CodigoCurso.POS_GRADUACAO_COMPUTACAO);
-        //universidade.pegarCopiaDoMonteDoCurso(CodigoCurso.POS_GRADUACAO_ENGENHARIA_ELETRICA);
-        //universidade.pegarCopiaDoMonteDoCurso(CodigoCurso.POS_GRADUACAO_MICROELETRONICA);
-
-        for(int i = 0; i < 5; i++){
+        // Sincroniza o vetor de superprocessos com os processos da mesa.
+        // Quando um processo é despachado, a mesa coloca um Processo novo no
+        // mesmo índice; a comparação por referência detecta essa troca.
+        for (int i = 0; i < superprocessos.length; i++) {
             Processo atual = mesa.getProcesso(i);
-            
-            if (atual != null && (superprocessos[i] == null || !superprocessos[i].ativo)) {
+
+            if (atual == null) {
+                superprocessos[i] = null;
+            } else if (superprocessos[i] == null || superprocessos[i].getProcesso() != atual) {
                 superprocessos[i] = new Superprocesso(atual);
             }
         }
 
-        
+        // --- Exemplo: pegar um documento de um curso e colocá-lo em um processo ---
+        // Esqueleto do fluxo básico. A escolha de qual documento e de qual
+        // processo ainda será desenvolvida; como podeReceber() recusa tudo por
+        // enquanto, nenhum documento é movido de fato.
+        CodigoCurso curso = CodigoCurso.GRADUACAO_CIENCIA_DA_COMPUTACAO;
+        Documento[] monte = universidade.pegarCopiaDoMonteDoCurso(curso);
 
-
+        for (Documento documento : monte) {
+            for (Superprocesso superprocesso : superprocessos) {
+                if (superprocesso == null || !superprocesso.isAtivo()) {
+                    continue;
+                }
+                if (superprocesso.podeReceber(documento)) {
+                    // Só adiciona ao processo o documento que foi realmente
+                    // removido do monte, senão a Universidade acusa duplicata.
+                    if (universidade.removerDocumentoDoMonteDoCurso(documento, curso)) {
+                        superprocesso.adicionar(documento);
+                    }
+                    break; // documento tratado, passa para o próximo
+                }
+            }
+        }
     }
     
     /**
