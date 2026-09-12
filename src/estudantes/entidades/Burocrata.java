@@ -77,10 +77,12 @@ public class Burocrata {
         // Esqueleto do fluxo básico. A escolha de qual documento e de qual
         // processo ainda será desenvolvida; como podeReceber() recusa tudo por
         // enquanto, nenhum documento é movido de fato.
-        CodigoCurso curso = CodigoCurso.GRADUACAO_CIENCIA_DA_COMPUTACAO;
+    
+        for(CodigoCurso curso:CodigoCurso.values()){//Em vez de pegar apenas um curso, como a variavel que tinha da CIC, ele verifica simultaneamente todos os cursos
         Documento[] monte = universidade.pegarCopiaDoMonteDoCurso(curso);
 
         for (Documento documento : monte) {
+            boolean alocado = false;
             for (Superprocesso superprocesso : superprocessos) {
                 if (superprocesso == null || !superprocesso.isAtivo()) {
                     continue;
@@ -90,12 +92,31 @@ public class Burocrata {
                     // removido do monte, senão a Universidade acusa duplicata.
                     if (universidade.removerDocumentoDoMonteDoCurso(documento, curso)) {
                         superprocesso.adicionar(documento);
+                        alocado = true;
                     }
                     break; // documento tratado, passa para o próximo
                 }
+                if (alocado == false) {
+                    universidade.devolverDocumentoParaMonteDoCurso(documento, curso);
+                    }/// Devolucao documentos Rejeitados
+                }
             }
         }
+
+        for(Superprocesso superprocesso:superprocessos){
+                if (superprocesso != null && superprocesso.isAtivo()) {
+                    if (superprocesso.getTotalPaginas()>200) {//Aqui deve ser posto OU para ver se tem documento substancial valido  com um getter, a proposito, mas nao sei se o babylook vai fazer. 
+                       /// fazer tbm uma verificacao se o superprocesso eh composto por apenas atas antes de enviar. 
+                       universidade.despachar(superprocesso.getProcesso());
+                       superprocesso.encerrar();
+                    }
+                    
+                }
+
+        }
     }
+
+
     
     /**
      * Retorna o valor atual de estresse do burocrata.
