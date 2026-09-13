@@ -1,5 +1,8 @@
 package estudantes.entidades;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import professor.entidades.Processo;
 
 /**
@@ -207,14 +210,30 @@ public class Superprocesso {
             categoriaAtestado = ((Atestado) documento).getCategoria();
         }
 
-        // TODO regra 5: manter a interseção dos destinatários de circulares/ofícios
-
-         if (documento instanceof Circular || documento instanceof Oficio){
-            if(destinatariosComuns == null){
-                destinatariosComuns = ((Circular) documento).getDestinatarios().clone();
+        // Regra 5: manter a interseção dos destinatários de circulares/ofícios
+        if (documento instanceof Circular || documento instanceof Oficio) {
+            String[] destinatariosDocumento;
+            if (documento instanceof Circular) {
+                destinatariosDocumento = ((Circular) documento).getDestinatarios();
+            } else {
+                destinatariosDocumento = new String[] { ((Oficio) documento).getDestinatario() };
             }
-            for(((Circular)documento).getDestinatarios() )
-         }
+
+            if (destinatariosComuns == null) {
+                destinatariosComuns = destinatariosDocumento.clone();
+            } else {
+                List<String> intersecao = new ArrayList<>();
+                for (String destinoComum : destinatariosComuns) {
+                    for (String destinoDocumento : destinatariosDocumento) {
+                        if (destinoComum != null && destinoComum.equals(destinoDocumento)) {
+                            intersecao.add(destinoComum);
+                            break;
+                        }
+                    }
+                }
+                destinatariosComuns = intersecao.toArray(new String[0]);
+            }
+        }
     }
 
     /**
