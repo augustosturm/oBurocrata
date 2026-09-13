@@ -1,5 +1,8 @@
 package estudantes.entidades;
 
+import java.util.Arrays;
+import java.util.Comparator;
+
 import professor.entidades.*;
 
 /**
@@ -78,7 +81,17 @@ public class Burocrata {
         // processo ainda será desenvolvida; como podeReceber() recusa tudo por
         // enquanto, nenhum documento é movido de fato.
     
-        for(CodigoCurso curso:CodigoCurso.values()){//Em vez de pegar apenas um curso, como a variavel que tinha da CIC, ele verifica simultaneamente todos os cursos
+        // Prioriza o curso com mais documentos acumulados no monte a cada ciclo.
+        // Isso evita que um curso fique starving: se ele nunca consegue
+        // despachar (ex.: pós-graduação sempre barrada pela regra 1 nos
+        // superprocessos já tomados por graduação), o monte dele cresce mais
+        // que o dos outros e ele passa a ser o primeiro a tentar qualquer
+        // superprocesso recém-esvaziado.
+        CodigoCurso[] ordemPrioridade = CodigoCurso.values();
+        Arrays.sort(ordemPrioridade, Comparator.comparingInt(universidade::contarDocumentosNoMonteDoCurso).reversed());
+
+        for(CodigoCurso curso: ordemPrioridade){
+
             Documento[] monte = universidade.pegarCopiaDoMonteDoCurso(curso);
 
             for (Documento documento : monte) {
