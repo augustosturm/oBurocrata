@@ -82,24 +82,36 @@ public class Burocrata {
             Documento[] monte = universidade.pegarCopiaDoMonteDoCurso(curso);
 
             for (Documento documento : monte) {
-                boolean alocado = false;
+                // Best-fit: em vez de usar o primeiro superprocesso que aceitar o
+                // documento, avalia todos os candidatos e escolhe o que sobrar
+                // menos espaço depois de inserido. Isso mantém mais superprocessos
+                // vazios disponíveis para documentos substanciais (regra 4).
+                Superprocesso melhor = null;
+                int menorSobra = Integer.MAX_VALUE;
+
                 for (Superprocesso superprocesso : superprocessos) {
                     if (superprocesso == null || !superprocesso.isAtivo()) {
                         continue;
                     }
-                    if (superprocesso.podeReceber(documento)) {
-                        // Só adiciona ao processo o documento que foi realmente
-                        // removido do monte, senão a Universidade acusa duplicata.
-                        if (universidade.removerDocumentoDoMonteDoCurso(documento, curso)) {
-                            superprocesso.adicionar(documento);
-                            alocado = true;
-                        }
-                        break; // documento tratado, passa para o próximo
+                    if (!superprocesso.podeReceber(documento)) {
+                        continue;
                     }
-                    if (alocado == false) {
-                        universidade.devolverDocumentoParaMonteDoCurso(documento, curso);
-                    }/// Devolucao documentos Rejeitados
+                    int sobra = superprocesso.getPaginasRestantes() - documento.getPaginas();
+                    if (sobra < menorSobra) {
+                        menorSobra = sobra;
+                        melhor = superprocesso;
+                    }
                 }
+
+                if (melhor != null) {
+                    // Só adiciona ao processo o documento que foi realmente
+                    // removido do monte, senão a Universidade acusa duplicata.
+                    if (universidade.removerDocumentoDoMonteDoCurso(documento, curso)) {
+                        melhor.adicionar(documento);
+                    }
+                }
+                // Se nenhum superprocesso aceitar, o documento nem chega a ser
+                // removido do monte, então não há nada para devolver.
             }
         }
 
@@ -110,7 +122,7 @@ public class Burocrata {
                     universidade.despachar(superprocesso.getProcesso());
                     superprocesso.encerrar();
                 }
-                
+
             }
 
         }
