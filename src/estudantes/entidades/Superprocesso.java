@@ -282,6 +282,13 @@ public class Superprocesso {
     public int getPaginasRestantes() {
         return LIMITE_PAGINAS - totalPaginas;
     }
+
+    /**
+     * @return true se tem substancial válido
+     */
+    public boolean getSubstancialValido() {
+        return temSubstancialValido;
+    }
 ///////
     /**
      * @return true se nenhum documento foi adicionado ainda

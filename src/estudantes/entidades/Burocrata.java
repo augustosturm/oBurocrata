@@ -117,7 +117,7 @@ public class Burocrata {
 
         for(Superprocesso superprocesso:superprocessos){
             if (superprocesso != null && superprocesso.isAtivo()) {
-                if (superprocesso.getTotalPaginas()>200) {//Aqui deve ser posto OU para ver se tem documento substancial valido  com um getter, a proposito, mas nao sei se o babylook vai fazer. 
+                if (superprocesso.getTotalPaginas()>200 || superprocesso.getSubstancialValido()) {//Aqui deve ser posto OU para ver se tem documento substancial valido  com um getter, a proposito, mas nao sei se o babylook vai fazer. 
                     /// fazer tbm uma verificacao se o superprocesso eh composto por apenas atas antes de enviar. 
                     universidade.despachar(superprocesso.getProcesso());
                     superprocesso.encerrar();
