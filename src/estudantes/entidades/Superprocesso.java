@@ -88,6 +88,11 @@ public class Superprocesso {
     public boolean podeReceber(Documento documento) {
         // TODO desenvolver a checagem, combinando o estado atual com o documento:
         //   - limite de páginas: totalPaginas + documento.getPaginas() <= LIMITE_PAGINAS
+        //   - regra 3: limite de páginas
+        if(documento.getPaginas() + this.totalPaginas > 250){
+            return false;
+        }
+
         //   - regra 1: não misturar graduação e pós-graduação
         switch (documento.getCodigoCurso()) {
             case POS_GRADUACAO_COMPUTACAO:
