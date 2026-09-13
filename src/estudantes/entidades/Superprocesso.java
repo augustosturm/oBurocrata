@@ -104,6 +104,10 @@ public class Superprocesso {
             }
         }
 
+        if(temSubstancialValido){
+            return false;
+        }
+
         //   - regra 1: não misturar graduação e pós-graduação
         switch (documento.getCodigoCurso()) {
             case POS_GRADUACAO_COMPUTACAO:
@@ -127,39 +131,40 @@ public class Superprocesso {
         if ((documento instanceof Portaria || documento instanceof Edital) && documento.getPaginas() >= 100 && ((Norma) documento).isValido())
             if(!this.estaVazio())
                 return false;
+
         //   - regra 5: circulares/ofícios precisam manter um destinatário em comum
         if (documento instanceof Circular || documento instanceof Oficio) {
             boolean temEmComum = false; 
-            if (this.destinatariosComuns == null)
-                return false;
-            if (documento instanceof Oficio) { 
-                Oficio oficio = (Oficio) documento; 
-                String destOficio = oficio.getDestinatario(); 
-                if (destOficio != null) { 
-                    for (String destProcesso : this.destinatariosComuns) { 
-                        if (destOficio.equals(destProcesso)) { 
-                            temEmComum = true; 
-                            break; 
+            if (this.destinatariosComuns != null){
+                if (documento instanceof Oficio) { 
+                    Oficio oficio = (Oficio) documento; 
+                    String destOficio = oficio.getDestinatario(); 
+                    if (destOficio != null) { 
+                        for (String destProcesso : this.destinatariosComuns) { 
+                            if (destOficio.equals(destProcesso)) { 
+                                temEmComum = true; 
+                                break; 
+                            } 
                         } 
                     } 
-                } 
-            } else if (documento instanceof Circular) { 
-            Circular circular = (Circular) documento; 
-            String[] destsCircular = circular.getDestinatarios(); 
-            if (destsCircular != null) { // Percorre cada destinatário da Circular e compara com os do processo 
-            for (String destCirc : destsCircular) { 
-                if (destCirc != null) { 
-                    for (String destProcesso : this.destinatariosComuns) { 
-                        if (destCirc.equals(destProcesso)) { 
-                            temEmComum = true; break; 
+                } else if (documento instanceof Circular) { 
+                    Circular circular = (Circular) documento; 
+                    String[] destsCircular = circular.getDestinatarios(); 
+                    if (destsCircular != null) { // Percorre cada destinatário da Circular e compara com os do processo 
+                        for (String destCirc : destsCircular) { 
+                            if (destCirc != null) { 
+                                for (String destProcesso : this.destinatariosComuns) { 
+                                    if (destCirc.equals(destProcesso)) { 
+                                        temEmComum = true; break; 
+                                    } 
+                                } 
+                            } if (temEmComum) { 
+                                break; 
+                            } 
                         } 
                     } 
-                } if (temEmComum) { 
-                    break; 
-                    } 
-                } 
+                }
             } 
-        } 
         if (!temEmComum)  return false; 
         } 
 
