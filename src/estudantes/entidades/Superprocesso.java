@@ -209,6 +209,13 @@ public class Superprocesso {
     public int getQuantidadeDocumentos() {
         return quantidadeDocumentos;
     }
+
+    /**
+     * @return quantas páginas ainda cabem neste processo antes do limite de transporte
+     */
+    public int getPaginasRestantes() {
+        return LIMITE_PAGINAS - totalPaginas;
+    }
 ///////
     /**
      * @return true se nenhum documento foi adicionado ainda
