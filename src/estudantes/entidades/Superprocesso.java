@@ -42,6 +42,9 @@ public class Superprocesso {
     private boolean temAdministrativo;
     private boolean temAcademico;
 
+    /** Regra 3: Não pode ter apenas atas. */
+    private boolean temNaoAta;
+
     /** Regra 4: portaria/edital com 100+ páginas e ainda válido exige processo exclusivo. */
     private boolean temSubstancialValido;
 
@@ -73,6 +76,7 @@ public class Superprocesso {
         this.temIncompativelComDiploma = false;
         this.categoriaAtestado = null;
         this.destinatariosComuns = null;
+        this.temNaoAta = false;
     }
 
     /**
@@ -91,6 +95,13 @@ public class Superprocesso {
         //   - regra 3: limite de páginas
         if(documento.getPaginas() + this.totalPaginas > 250){
             return false;
+        }
+
+        //   - regra 3: não pode ter apenas atas
+        if (documento instanceof Ata) {
+            if (!this.temNaoAta && this.quantidadeDocumentos > 0) {
+                return false;
+            }
         }
 
         //   - regra 1: não misturar graduação e pós-graduação
@@ -239,7 +250,10 @@ public class Superprocesso {
                 destinatariosComuns = intersecao.toArray(new String[0]);
             }
         }
+        // regra 3: Não pode ter apenas atas
+        if (!(documento instanceof Ata)) { this.temNaoAta = true; }
     }
+
 
     /**
      * Marca este superprocesso como encerrado (usar após despachar o processo).
