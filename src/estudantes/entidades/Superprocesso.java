@@ -164,9 +164,9 @@ public class Superprocesso {
                         } 
                     } 
                 }
-            } 
-        if (!temEmComum)  return false; 
-        } 
+            }
+        if (destinatariosComuns != null && !temEmComum)  return false;
+        }
 
         //   - regra 6: diploma só com diploma, certificado ou ata
         if (documento instanceof Diploma && this.temIncompativelComDiploma)
