@@ -49,7 +49,7 @@ public class Superprocesso {
     /** Regra 7: todos os atestados do processo precisam ser da mesma categoria. */
     private String categoriaAtestado;
 
-    private  String [] destinatario;
+    private  String [] destinatariosComuns;
 
     /**
      * Cria o superprocesso vinculado a um processo aberto na mesa.
@@ -69,7 +69,7 @@ public class Superprocesso {
         this.temDiploma = false;
         this.temIncompativelComDiploma = false;
         this.categoriaAtestado = null;
-        this.destinatario = null;
+        this.destinatariosComuns = null;
     }
 
     /**
@@ -109,11 +109,53 @@ public class Superprocesso {
             if(!this.estaVazio())
                 return false;
         //   - regra 5: circulares/ofícios precisam manter um destinatário em comum
-        if (documento instanceof Circular || documento instanceof Oficio)
-            if(this.destinatario)
+        if (documento instanceof Circular || documento instanceof Oficio) {
+            boolean temEmComum = false; 
+            if (this.destinatariosComuns == null)
+                return false;
+            if (documento instanceof Oficio) { 
+                Oficio oficio = (Oficio) documento; 
+                String destOficio = oficio.getDestinatario(); 
+                if (destOficio != null) { 
+                    for (String destProcesso : this.destinatariosComuns) { 
+                        if (destOficio.equals(destProcesso)) { 
+                            temEmComum = true; 
+                            break; 
+                        } 
+                    } 
+                } 
+            } else if (documento instanceof Circular) { 
+            Circular circular = (Circular) documento; 
+            String[] destsCircular = circular.getDestinatarios(); 
+            if (destsCircular != null) { // Percorre cada destinatário da Circular e compara com os do processo 
+            for (String destCirc : destsCircular) { 
+                if (destCirc != null) { 
+                    for (String destProcesso : this.destinatariosComuns) { 
+                        if (destCirc.equals(destProcesso)) { 
+                            temEmComum = true; break; 
+                        } 
+                    } 
+                } if (temEmComum) { 
+                    break; 
+                    } 
+                } 
+            } 
+        } 
+        if (!temEmComum)  return false; 
+        } 
+
         //   - regra 6: diploma só com diploma, certificado ou ata
+        if (documento instanceof Diploma && this.temIncompativelComDiploma)
+            return false;
+        else if (!(documento instanceof Certificado) && !(documento instanceof Ata) && this.temDiploma)
+            return false;
         //   - regra 7: atestado precisa ser da mesma categoria dos já presentes
-        return false;
+        if (documento instanceof Atestado) {
+            String categoria = ((Atestado) documento).getCategoria();
+            if (this.categoriaAtestado != null && !this.categoriaAtestado.equals(categoria))
+                return false;
+        }
+        return true;
     }
 
     /**
@@ -168,8 +210,8 @@ public class Superprocesso {
         // TODO regra 5: manter a interseção dos destinatários de circulares/ofícios
 
          if (documento instanceof Circular || documento instanceof Oficio){
-            if(destinatario == null){
-                destinatario = ((Circular) documento).getDestinatarios().clone();
+            if(destinatariosComuns == null){
+                destinatariosComuns = ((Circular) documento).getDestinatarios().clone();
             }
             for(((Circular)documento).getDestinatarios() )
          }
