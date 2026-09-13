@@ -17,7 +17,7 @@ build:
 	$(JAVAC) -d $(OUT_DIR) $(SOURCES)
 
 run: build
-	$(JAVA) -cp $(OUT_DIR) Main
+	$(JAVA) -cp $(OUT_DIR) professor.gui.SimuladorGUI
 
 javadoc:
 	$(JAVADOC) -d $(DOC_DIR) $(SOURCES)
