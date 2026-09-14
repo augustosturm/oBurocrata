@@ -148,7 +148,7 @@ public class Burocrata {
 
         for(Superprocesso superprocesso:superprocessos){
             if (superprocesso != null && superprocesso.isAtivo()) {
-                if (superprocesso.getTotalPaginas()>200 || superprocesso.getSubstancialValido()) {
+                if (superprocesso.getTotalPaginas()>249 || superprocesso.getSubstancialValido()) {
                     universidade.despachar(superprocesso.getProcesso());
                     superprocesso.encerrar();
                 }
