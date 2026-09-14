@@ -16,10 +16,16 @@ import professor.entidades.*;
  * @author Augusto, Gabriel e Matheus
  */
 public class Burocrata {
+    /** Estresse acumulado pelo burocrata durante a execução. */
     private int estresse = 0;
+
+    /** Mesa que contém os processos sob responsabilidade do burocrata. */
     private Mesa mesa;
+
+    /** Universidade que fornece os documentos e recebe os processos despachados. */
     private Universidade universidade;
-    
+
+    /** Superprocessos utilizados para agrupar documentos antes do despacho. */
     public Superprocesso[] superprocessos;
   
     
@@ -63,9 +69,11 @@ public class Burocrata {
      * @see professor.entidades.Universidade#devolverDocumentoParaMonteDoCurso(estudantes.entidades.Documento, professor.entidades.CodigoCurso) 
      */
     public void trabalhar(){
-        // Sincroniza o vetor de superprocessos com os processos da mesa.
-        // Quando um processo é despachado, a mesa coloca um Processo novo no
-        // mesmo índice; a comparação por referência detecta essa troca.
+        /**
+         * Sincroniza o vetor de superprocessos com os processos da mesa.
+         * Quando um processo é despachado, a mesa coloca um Processo novo no
+         * mesmo índice; a comparação por referência detecta essa troca.
+         */
         for (int i = 0; i < superprocessos.length; i++) {
             Processo atual = mesa.getProcesso(i);
 
@@ -76,17 +84,21 @@ public class Burocrata {
             }
         }
 
-        // --- Exemplo: pegar um documento de um curso e colocá-lo em um processo ---
-        // Esqueleto do fluxo básico. A escolha de qual documento e de qual
-        // processo ainda será desenvolvida; como podeReceber() recusa tudo por
-        // enquanto, nenhum documento é movido de fato.
+        /**
+         * Exemplo: pegar um documento de um curso e colocá-lo em um processo.
+         * Esqueleto do fluxo básico. A escolha de qual documento e de qual
+         * processo ainda será desenvolvida; como podeReceber() recusa tudo por
+         * enquanto, nenhum documento é movido de fato.
+         */
     
-        // Prioriza o curso com mais documentos acumulados no monte a cada ciclo.
-        // Isso evita que um curso fique starving: se ele nunca consegue
-        // despachar (ex.: pós-graduação sempre barrada pela regra 1 nos
-        // superprocessos já tomados por graduação), o monte dele cresce mais
-        // que o dos outros e ele passa a ser o primeiro a tentar qualquer
-        // superprocesso recém-esvaziado.
+        /**
+         * Prioriza o curso com mais documentos acumulados no monte a cada ciclo.
+         * Isso evita que um curso fique starving: se ele nunca consegue
+         * despachar (ex.: pós-graduação sempre barrada pela regra 1 nos
+         * superprocessos já tomados por graduação), o monte dele cresce mais
+         * que o dos outros e ele passa a ser o primeiro a tentar qualquer
+         * superprocesso recém-esvaziado.
+         */
         CodigoCurso[] ordemPrioridade = CodigoCurso.values();
         Arrays.sort(ordemPrioridade, Comparator.comparingInt(universidade::contarDocumentosNoMonteDoCurso).reversed());
 
@@ -95,10 +107,12 @@ public class Burocrata {
             Documento[] monte = universidade.pegarCopiaDoMonteDoCurso(curso);
 
             for (Documento documento : monte) {
-                // Best-fit: em vez de usar o primeiro superprocesso que aceitar o
-                // documento, avalia todos os candidatos e escolhe o que sobrar
-                // menos espaço depois de inserido. Isso mantém mais superprocessos
-                // vazios disponíveis para documentos substanciais (regra 4).
+                /**
+                 * Best-fit: em vez de usar o primeiro superprocesso que aceitar o
+                 * documento, avalia todos os candidatos e escolhe o que sobrar
+                 * menos espaço depois de inserido. Isso mantém mais superprocessos
+                 * vazios disponíveis para documentos substanciais (regra 4).
+                 */
                 Superprocesso melhor = null;
                 int menorSobra = Integer.MAX_VALUE;
 
@@ -117,21 +131,24 @@ public class Burocrata {
                 }
 
                 if (melhor != null) {
-                    // Só adiciona ao processo o documento que foi realmente
-                    // removido do monte, senão a Universidade acusa duplicata.
+                    /**
+                     * Só adiciona ao processo o documento que foi realmente
+                     * removido do monte, senão a Universidade acusa duplicata.
+                     */
                     if (universidade.removerDocumentoDoMonteDoCurso(documento, curso)) {
                         melhor.adicionar(documento);
                     }
                 }
-                // Se nenhum superprocesso aceitar, o documento nem chega a ser
-                // removido do monte, então não há nada para devolver.
+                /**
+                 * Se nenhum superprocesso aceitar, o documento nem chega a ser
+                 * removido do monte, então não há nada para devolver.
+                 */
             }
         }
 
         for(Superprocesso superprocesso:superprocessos){
             if (superprocesso != null && superprocesso.isAtivo()) {
-                if (superprocesso.getTotalPaginas()>200 || superprocesso.getSubstancialValido()) {//Aqui deve ser posto OU para ver se tem documento substancial valido  com um getter, a proposito, mas nao sei se o babylook vai fazer. 
-                    /// fazer tbm uma verificacao se o superprocesso eh composto por apenas atas antes de enviar. 
+                if (superprocesso.getTotalPaginas()>200 || superprocesso.getSubstancialValido()) {
                     universidade.despachar(superprocesso.getProcesso());
                     superprocesso.encerrar();
                 }

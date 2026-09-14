@@ -29,17 +29,24 @@ public class Superprocesso {
     /** Indica se este superprocesso ainda corresponde a um processo aberto. */
     private boolean ativo;
 
-    // --- Agregados usados pelas regras de despacho ---
+    /** Agregados usados pelas regras de despacho. */
 
+    /** Soma das páginas dos documentos adicionados. */
     private int totalPaginas;
+
+    /** Quantidade de documentos adicionados ao processo. */
     private int quantidadeDocumentos;
 
     /** Regra 1: graduação não pode ser despachada junto de pós-graduação. */
     private boolean temGraduacao;
+
+    /** Indica se o processo contém documento de pós-graduação. */
     private boolean temPosGraduacao;
 
     /** Regra 2: administrativo não pode ser despachado junto de acadêmico (ata é neutra). */
     private boolean temAdministrativo;
+
+    /** Indica se o processo contém documento acadêmico. */
     private boolean temAcademico;
 
     /** Regra 3: Não pode ter apenas atas. */
@@ -50,11 +57,14 @@ public class Superprocesso {
 
     /** Regra 6: diploma só pode ir com diploma, certificado ou ata. */
     private boolean temDiploma;
+
+    /** Indica se há documento incompatível com diploma no processo. */
     private boolean temIncompativelComDiploma;
 
     /** Regra 7: todos os atestados do processo precisam ser da mesma categoria. */
     private String categoriaAtestado;
 
+    /** Destinatários comuns aos documentos de comunicação do processo. */
     private  String [] destinatariosComuns;
 
     /**
@@ -90,14 +100,15 @@ public class Superprocesso {
      * @return true se o documento pode ser adicionado, false caso contrário
      */
     public boolean podeReceber(Documento documento) {
-        // TODO desenvolver a checagem, combinando o estado atual com o documento:
-        //   - limite de páginas: totalPaginas + documento.getPaginas() <= LIMITE_PAGINAS
-        //   - regra 3: limite de páginas
+        /**
+         * Desenvolve a checagem combinando o estado atual com o documento:
+         * limite de páginas e regras de compatibilidade do processo.
+         */
         if(documento.getPaginas() + this.totalPaginas > 250){
             return false;
         }
 
-        //   - regra 3: não pode ter apenas atas
+        /** Regra 3: o processo não pode conter apenas atas. */
         if (documento instanceof Ata) {
             if (!this.temNaoAta && this.quantidadeDocumentos > 0) {
                 return false;
@@ -108,7 +119,7 @@ public class Superprocesso {
             return false;
         }
 
-        //   - regra 1: não misturar graduação e pós-graduação
+        /** Regra 1: não misturar graduação e pós-graduação. */
         switch (documento.getCodigoCurso()) {
             case POS_GRADUACAO_COMPUTACAO:
             case POS_GRADUACAO_ENGENHARIA_ELETRICA:
@@ -121,13 +132,13 @@ public class Superprocesso {
                     return false;
         }
 
-        //   - regra 2: não misturar administrativo e acadêmico (ata é livre)
+        /** Regra 2: não misturar documentos administrativos e acadêmicos. */
         if(documento instanceof DocumentoAdministrativo && this.temAcademico)
             return false;
         else if(documento instanceof DocumentoAcademico && this.temAdministrativo)
             return false;
 
-        //   - regra 4: substancial válido só entra em processo vazio, e nada entra depois dele
+        /** Regra 4: documento substancial válido só entra em processo vazio. */
         if ((documento instanceof Portaria || documento instanceof Edital) && documento.getPaginas() >= 100 && ((Norma) documento).isValido())
             if(!this.estaVazio())
                 return false;
@@ -150,7 +161,8 @@ public class Superprocesso {
                 } else if (documento instanceof Circular) { 
                     Circular circular = (Circular) documento; 
                     String[] destsCircular = circular.getDestinatarios(); 
-                    if (destsCircular != null) { // Percorre cada destinatário da Circular e compara com os do processo 
+                    if (destsCircular != null) {
+                        /** Percorre cada destinatário da circular e compara com os do processo. */
                         for (String destCirc : destsCircular) { 
                             if (destCirc != null) { 
                                 for (String destProcesso : this.destinatariosComuns) { 
@@ -168,12 +180,12 @@ public class Superprocesso {
         if (destinatariosComuns != null && !temEmComum)  return false;
         }
 
-        //   - regra 6: diploma só com diploma, certificado ou ata
+        /** Regra 6: diploma só pode ser agrupado com diploma, certificado ou ata. */
         if (documento instanceof Diploma && this.temIncompativelComDiploma)
             return false;
         else if (!(documento instanceof Certificado) && !(documento instanceof Ata) && this.temDiploma)
             return false;
-        //   - regra 7: atestado precisa ser da mesma categoria dos já presentes
+        /** Regra 7: atestado precisa ser da mesma categoria dos já presentes. */
         if (documento instanceof Atestado) {
             String categoria = ((Atestado) documento).getCategoria();
             if (this.categoriaAtestado != null && !this.categoriaAtestado.equals(categoria))
@@ -195,7 +207,7 @@ public class Superprocesso {
         totalPaginas += documento.getPaginas();
         quantidadeDocumentos++;
 
-        // Regra 1: origem do documento (graduação x pós-graduação)
+        /** Regra 1: origem do documento, entre graduação e pós-graduação. */
         switch (documento.getCodigoCurso()) {
             case POS_GRADUACAO_COMPUTACAO:
             case POS_GRADUACAO_ENGENHARIA_ELETRICA:
@@ -206,32 +218,32 @@ public class Superprocesso {
                 temGraduacao = true;
         }
 
-        // Regra 2: família do documento (ata não é administrativo nem acadêmico)
+        /** Regra 2: família do documento; ata não é administrativa nem acadêmica. */
         if (documento instanceof DocumentoAdministrativo) {
             temAdministrativo = true;
         } else if (documento instanceof DocumentoAcademico) {
             temAcademico = true;
         }
 
-        // Regra 4: portaria ou edital substancial e ainda válido
+        /** Regra 4: portaria ou edital substancial e ainda válido. */
         if ((documento instanceof Portaria || documento instanceof Edital)
                 && documento.getPaginas() >= 100 && ((Norma) documento).isValido()) {
             temSubstancialValido = true;
         }
 
-        // Regra 6: compatibilidade com diploma
+        /** Regra 6: compatibilidade com diploma. */
         if (documento instanceof Diploma) {
             temDiploma = true;
         } else if (!(documento instanceof Certificado) && !(documento instanceof Ata)) {
             temIncompativelComDiploma = true;
         }
 
-        // Regra 7: guarda a categoria do primeiro atestado encontrado
+        /** Regra 7: guarda a categoria do primeiro atestado encontrado. */
         if (documento instanceof Atestado && categoriaAtestado == null) {
             categoriaAtestado = ((Atestado) documento).getCategoria();
         }
 
-        // Regra 5: manter a interseção dos destinatários de circulares/ofícios
+        /** Regra 5: mantém a interseção dos destinatários de circulares e ofícios. */
         if (documento instanceof Circular || documento instanceof Oficio) {
             String[] destinatariosDocumento;
             if (documento instanceof Circular) {
@@ -255,7 +267,7 @@ public class Superprocesso {
                 destinatariosComuns = intersecao.toArray(new String[0]);
             }
         }
-        // regra 3: Não pode ter apenas atas
+        /** Regra 3: o processo não pode conter apenas atas. */
         if (!(documento instanceof Ata)) { this.temNaoAta = true; }
     }
 
@@ -308,8 +320,9 @@ public class Superprocesso {
     public boolean getSubstancialValido() {
         return temSubstancialValido;
     }
-///////
     /**
+    * Verifica se nenhum documento foi adicionado ainda.
+    *
      * @return true se nenhum documento foi adicionado ainda
      */
     public boolean estaVazio() {
